@@ -30,6 +30,7 @@ hamburger.addEventListener('click', () => {
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
         hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
     });
 });
 
