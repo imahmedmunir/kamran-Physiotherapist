@@ -1,0 +1,21 @@
+# robots.txt for Kamran Physio Clinic
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+
+# Allow search engines to crawl images
+Allow: /*.jpg
+Allow: /*.png
+Allow: /*.gif
+
+# Specify sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Delay for aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
