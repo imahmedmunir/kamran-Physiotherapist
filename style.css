@@ -637,6 +637,121 @@ body {
     transform: translateX(5px);
 }
 
+/* Tabbed services styles */
+.services-tabs-wrapper {
+    margin-top: 2rem;
+}
+.service-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+.service-tab {
+    background: white;
+    border: 1px solid var(--border-light);
+    color: var(--text-dark);
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+.service-tab.active {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+.service-tab:focus {
+    outline: none;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.15);
+}
+.service-panels {
+    margin-top: 1rem;
+}
+.service-panel {
+    display: none;
+}
+.service-panel.active {
+    display: block;
+}
+.service-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.price-badge {
+    background: #f3f4f6;
+    color: var(--text-dark);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Appointment form styles */
+.appointment-wrapper {
+    margin: 2rem 0 1.5rem;
+    background: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+}
+.appointment-form .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+.appointment-form .form-group { flex: 1 1 220px; }
+.appointment-form .form-group.full { flex-basis: 100%; }
+.appointment-form input,
+.appointment-form select,
+.appointment-form textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+.appointment-form input:focus,
+.appointment-form select:focus,
+.appointment-form textarea:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 6px 18px rgba(13,110,253,0.08);
+    outline: none;
+}
+.field-error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 14px;
+}
+.appointment-form input.invalid,
+.appointment-form select.invalid,
+.appointment-form textarea.invalid {
+    border-color: #dc3545;
+}
+.appointment-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+/* Make tabs scroll horizontally on small screens */
+@media (max-width: 600px) {
+    .service-tabs { padding: 0 6px; }
+    .service-tab { flex: 0 0 auto; }
+}
+
 /* =====================================================
    PROCESS SECTION
    ===================================================== */
@@ -1484,6 +1599,13 @@ body {
         align-items: center;
     }
 
+    .hero-bg {
+        background-image: url('clinic.jpg') !important;
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+    }
+
     .btn {
         padding: 0.85rem 1.5rem;
         font-size: 0.95rem;
@@ -1623,6 +1745,19 @@ body {
 
 .text-center {
     text-align: center;
+}
+
+/* Screen-reader only label */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
 }
 
 .mt-1 { margin-top: 0.5rem; }

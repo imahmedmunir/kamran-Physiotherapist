@@ -247,6 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const preloadImg = new Image();
         preloadImg.src = img;
     });
+    // Initialize service tabs and appointment form handlers
+    if (typeof initServiceTabs === 'function') initServiceTabs();
+    if (typeof setupAppointmentForm === 'function') setupAppointmentForm();
 });
 
 // ===== ACCESSIBILITY IMPROVEMENTS =====
@@ -274,5 +277,106 @@ if ('IntersectionObserver' in window) {
     
     document.querySelectorAll('img').forEach(img => {
         imageObserver.observe(img);
+    });
+}
+
+// ===== SERVICE TABS =====
+function initServiceTabs() {
+    const tabs = document.querySelectorAll('.service-tab');
+    const panels = document.querySelectorAll('.service-panel');
+
+    if (!tabs.length) return;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
+
+            tabs.forEach(t => {
+                t.classList.toggle('active', t === tab);
+                t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+            });
+
+            panels.forEach(panel => {
+                panel.classList.toggle('active', panel.getAttribute('data-panel') === target);
+            });
+        });
+    });
+}
+
+// ===== APPOINTMENT FORM VALIDATION & WHATSAPP DISPATCH =====
+function setupAppointmentForm() {
+    const form = document.getElementById('appointment-form');
+    if (!form) return;
+
+    const successEl = document.getElementById('appointment-success');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function clearErrors() {
+        form.querySelectorAll('.field-error').forEach(e => e.textContent = '');
+        form.querySelectorAll('.invalid').forEach(i => i.classList.remove('invalid'));
+    }
+
+    function showError(fieldName, message) {
+        const el = form.querySelector(`[data-for="${fieldName}"]`);
+        if (el) el.textContent = message;
+        const input = form.querySelector(`[name="${fieldName}"]`);
+        if (input) input.classList.add('invalid');
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        const name = form.querySelector('[name="name"]').value.trim();
+        const email = form.querySelector('[name="email"]').value.trim();
+        const phone = form.querySelector('[name="phone"]').value.trim();
+        const service = form.querySelector('[name="service"]').value.trim();
+        const message = form.querySelector('[name="message"]').value.trim();
+
+        let valid = true;
+
+        if (!name) { showError('name', 'Full name is required'); valid = false; }
+        if (!email || !emailRegex.test(email)) { showError('email', 'Please enter a valid email'); valid = false; }
+        const digits = phone.replace(/\D/g, '');
+        if (!phone || digits.length < 10) { showError('phone', 'Please enter a valid phone number'); valid = false; }
+        if (!service) { showError('service', 'Please select a service'); valid = false; }
+        if (!message) { showError('message', 'Please provide some details'); valid = false; }
+
+        if (!valid) {
+            // focus first invalid field
+            const firstInvalid = form.querySelector('.invalid');
+            if (firstInvalid) firstInvalid.focus();
+            return;
+        }
+
+        // Construct WhatsApp message (silently)
+        const waMessage = `New Appointment Request\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nService: ${service}\nMessage: ${message}`;
+        const encoded = encodeURIComponent(waMessage);
+        const waUrl = `https://wa.me/923332832031?text=${encoded}`;
+
+        // Open in new tab
+        window.open(waUrl, '_blank');
+
+        // Show success banner and reset form
+        if (successEl) {
+            successEl.style.display = 'block';
+            successEl.textContent = "Your request has been sent! We'll be in touch shortly.";
+        }
+        form.reset();
+
+        setTimeout(() => {
+            if (successEl) successEl.style.display = 'none';
+        }, 7000);
+    });
+
+    // Clear field error on input
+    form.querySelectorAll('input,textarea,select').forEach(el => {
+        el.addEventListener('input', () => {
+            const name = el.getAttribute('name');
+            const err = form.querySelector(`[data-for="${name}"]`);
+            if (err) err.textContent = '';
+            el.classList.remove('invalid');
+        });
     });
 }
